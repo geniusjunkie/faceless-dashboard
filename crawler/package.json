@@ -1,0 +1,15 @@
+{
+  "name": "faceless-dashboard-crawler",
+  "version": "1.0.0",
+  "description": "Free YouTube API crawler — replicates Nexlev niche-finder without a subscription",
+  "main": "run.js",
+  "scripts": {
+    "crawl": "node run.js",
+    "crawl:dry": "node run.js --dry-run",
+    "generate": "node run.js --generate-only"
+  },
+  "dependencies": {
+    "axios": "^1.7.2",
+    "dotenv": "^16.4.5"
+  }
+}
