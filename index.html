@@ -167,6 +167,25 @@ body {
 .filter-preset-btn:hover, .filter-preset-btn.active {
   background: var(--brand); border-color: var(--brand); color: white;
 }
+/* Tab match badge */
+.tab-match-badge {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 18px; height: 18px; border-radius: 9px; padding: 0 5px;
+  font-size: 10px; font-weight: 700; margin-left: 6px;
+  background: var(--brand); color: white; font-family: 'JetBrains Mono', monospace;
+  transition: opacity 0.2s;
+}
+.tab-match-badge.hidden { display: none; }
+.tab-match-badge.sleep-badge { background: var(--indigo); }
+/* Search highlight */
+.search-highlight { background: rgba(217,119,6,0.15); border-radius: 2px; }
+/* No results */
+.no-results-msg {
+  text-align: center; padding: 36px 20px; color: var(--text-3);
+  font-size: 13px;
+}
+.no-results-msg .nr-icon { font-size: 28px; margin-bottom: 8px; }
+.no-results-msg strong { color: var(--text-2); }
 .filter-divider { width: 1px; height: 24px; background: var(--border); }
 .match-count { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-3); white-space: nowrap; }
 .reset-btn {
@@ -513,8 +532,8 @@ td { padding: 12px 14px; font-size: 13px; vertical-align: top; }
     <div class="section-kpi-pill">isFaceless · isMonetized · 18–40min</div>
   </div>
   <div class="tabs-wrapper" id="vidrush-tabs">
-    <button class="tab-btn active" onclick="switchTab('vidrush','new')" id="vtab-new">New &amp; Proven (1A)</button>
-    <button class="tab-btn" onclick="switchTab('vidrush','bend')" id="vtab-bend">Bend Pool (1B)</button>
+    <button class="tab-btn active" onclick="switchTab('vidrush','new')" id="vtab-new">New &amp; Proven (1A)<span class="tab-match-badge hidden" id="badge-1a">0</span></button>
+    <button class="tab-btn" onclick="switchTab('vidrush','bend')" id="vtab-bend">Bend Pool (1B)<span class="tab-match-badge hidden" id="badge-1b">0</span></button>
   </div>
 
   <!-- 1A NEW & PROVEN -->
@@ -596,8 +615,8 @@ td { padding: 12px 14px; font-size: 13px; vertical-align: top; }
     <div class="section-kpi-pill">Snoozetorian / Sedated History adjacent</div>
   </div>
   <div class="tabs-wrapper" id="sleep-tabs">
-    <button class="tab-btn active sleep" onclick="switchTab('sleep','new')" id="stab-new">New &amp; Proven (2A)</button>
-    <button class="tab-btn sleep" onclick="switchTab('sleep','bend')" id="stab-bend">Bend Pool (2B)</button>
+    <button class="tab-btn active sleep" onclick="switchTab('sleep','new')" id="stab-new">New &amp; Proven (2A)<span class="tab-match-badge sleep-badge hidden" id="badge-2a">0</span></button>
+    <button class="tab-btn sleep" onclick="switchTab('sleep','bend')" id="stab-bend">Bend Pool (2B)<span class="tab-match-badge sleep-badge hidden" id="badge-2b">0</span></button>
   </div>
 
   <!-- 2A NEW & PROVEN -->
@@ -1170,15 +1189,18 @@ function applyFilters() {
   const search = document.getElementById('f-search').value.toLowerCase().trim();
   const sortBy = document.getElementById('f-sort').value;
 
-  let shown = 0, total = 0;
+  let shownTotal = 0, grandTotal = 0;
+  // Track matches per tab for badge + auto-switch
+  const tabCounts = {'1a':0,'1b':0,'2a':0,'2b':0,'3':0};
 
   const allTbodies = ['tbody-1a','tbody-1b','tbody-2a','tbody-2b','tbody-3'];
 
   allTbodies.forEach(tbodyId => {
+    const sectionKey = tbodyId.replace('tbody-','');
     const tbody = document.getElementById(tbodyId);
     if (!tbody) return;
 
-    // Gather channel rows with their associated vids/bend rows
+    // Gather trios (channel + vids + bend rows)
     const trios = [];
     const rows = Array.from(tbody.querySelectorAll('tr'));
     let i = 0;
@@ -1198,7 +1220,7 @@ function applyFilters() {
       } else { i++; }
     }
 
-    total += trios.length;
+    grandTotal += trios.length;
 
     // Sort
     trios.sort((a, b) => {
@@ -1213,8 +1235,9 @@ function applyFilters() {
       }
     });
 
-    // Clear and re-append
+    // Clear and re-append with visibility
     tbody.innerHTML = '';
+    let sectionShown = 0;
     trios.forEach(g => {
       const d = g.chanRow.dataset;
       const views = parseInt(d.views30d);
@@ -1232,20 +1255,128 @@ function applyFilters() {
 
       if (visible) {
         g.chanRow.style.display = '';
-        // Let CSS class control vids-row, only use inline display for forced-hide
         if (g.vidsRow) g.vidsRow.style.display = '';
         if (g.bendRow) g.bendRow.style.display = '';
-        shown++;
+        sectionShown++;
+        tabCounts[sectionKey] = (tabCounts[sectionKey] || 0) + 1;
       } else {
         g.chanRow.style.display = 'none';
         if (g.vidsRow) g.vidsRow.style.display = 'none';
         if (g.bendRow) g.bendRow.style.display = 'none';
       }
     });
+
+    // No-results placeholder
+    const existingNR = tbody.querySelector('.no-results-row');
+    if (existingNR) existingNR.remove();
+    if (sectionShown === 0 && trios.length > 0) {
+      const nr = document.createElement('tr');
+      nr.className = 'no-results-row';
+      const searchMsg = search ? ' matching <strong>"' + search.replace(/</g,'&lt;') + '"</strong>' : '';
+      nr.innerHTML = '<td colspan="10"><div class="no-results-msg"><div class="nr-icon">🔍</div>No channels' + searchMsg + ' in this section.<br><small>Try adjusting your filters or <a href="#" onclick="resetFilters();return false;">reset all</a>.</small></div></td>';
+      tbody.appendChild(nr);
+    }
+
+    shownTotal += sectionShown;
   });
 
-  document.getElementById('match-count').textContent = shown + ' / ' + total + ' shown';
+  document.getElementById('match-count').textContent = shownTotal + ' / ' + grandTotal + ' shown';
+
+  // ── Tab badges & auto-switch ──
+  const isFiltering = search || currentMinViews > 0
+    || document.getElementById('f-age-min').value
+    || document.getElementById('f-age-max').value
+    || document.getElementById('f-rpm-min').value;
+
+  // Vidrush tabs
+  const b1a = document.getElementById('badge-1a');
+  const b1b = document.getElementById('badge-1b');
+  if (isFiltering) {
+    b1a.textContent = tabCounts['1a']; b1a.classList.toggle('hidden', false);
+    b1b.textContent = tabCounts['1b']; b1b.classList.toggle('hidden', false);
+    // Auto-switch to whichever Vidrush tab has results; prefer 1A
+    const v1aActive = document.getElementById('vidrush-new').classList.contains('active');
+    const v1bActive = document.getElementById('vidrush-bend').classList.contains('active');
+    if (v1aActive && tabCounts['1a'] === 0 && tabCounts['1b'] > 0) switchTab('vidrush','bend');
+    if (v1bActive && tabCounts['1b'] === 0 && tabCounts['1a'] > 0) switchTab('vidrush','new');
+  } else {
+    b1a.classList.add('hidden'); b1b.classList.add('hidden');
+  }
+
+  // Sleep tabs
+  const b2a = document.getElementById('badge-2a');
+  const b2b = document.getElementById('badge-2b');
+  if (isFiltering) {
+    b2a.textContent = tabCounts['2a']; b2a.classList.toggle('hidden', false);
+    b2b.textContent = tabCounts['2b']; b2b.classList.toggle('hidden', false);
+    const s2aActive = document.getElementById('sleep-new').classList.contains('active');
+    const s2bActive = document.getElementById('sleep-bend').classList.contains('active');
+    if (s2aActive && tabCounts['2a'] === 0 && tabCounts['2b'] > 0) switchTab('sleep','bend');
+    if (s2bActive && tabCounts['2b'] === 0 && tabCounts['2a'] > 0) switchTab('sleep','new');
+  } else {
+    b2a.classList.add('hidden'); b2b.classList.add('hidden');
+  }
 }
+
+// ─────────────────────────────────────────────────
+// SORT (column headers)
+// ─────────────────────────────────────────────────
+const sortState = {};
+function sortTable(tableId, key) {
+  const tbody = document.getElementById('tbody-' + tableId.replace('tbl-',''));
+  if (!tbody) return;
+  const rows = Array.from(tbody.querySelectorAll('tr'));
+
+  const trios = [];
+  let i = 0;
+  while (i < rows.length) {
+    const row = rows[i];
+    if (row.classList.contains('channel-row')) {
+      const cid = row.dataset.channelId;
+      const group = { chanRow: row, vidsRow: null, bendRow: null };
+      let j = i + 1;
+      while (j < rows.length && !rows[j].classList.contains('channel-row')) {
+        if (rows[j].classList.contains('vids-row') && rows[j].dataset.channelId === cid) group.vidsRow = rows[j];
+        if (rows[j].classList.contains('bend-row') && rows[j].dataset.channelId === cid) group.bendRow = rows[j];
+        j++;
+      }
+      trios.push(group);
+      i = j;
+    } else { i++; }
+  }
+
+  const asc = sortState[tableId + key] = !sortState[tableId + key];
+
+  trios.sort((a, b) => {
+    const ad = a.chanRow.dataset, bd = b.chanRow.dataset;
+    let va, vb;
+    switch (key) {
+      case 'name':  va = ad.name; vb = bd.name; return asc ? va.localeCompare(vb) : vb.localeCompare(va);
+      case 'niche': va = ad.niche; vb = bd.niche; return asc ? va.localeCompare(vb) : vb.localeCompare(va);
+      case 'views30d': va = parseInt(ad.views30d); vb = parseInt(bd.views30d); break;
+      case 'rev':   va = parseInt(ad.estrev); vb = parseInt(bd.estrev); break;
+      case 'age':   va = parseInt(ad.age); vb = parseInt(bd.age); break;
+      case 'rpm':   va = parseFloat(ad.rpm); vb = parseFloat(bd.rpm); break;
+      case 'subs':  va = parseInt(ad.subs); vb = parseInt(bd.subs); break;
+      case 'len':   va = parseInt(ad.lenmin); vb = parseInt(bd.lenmin); break;
+      default: return 0;
+    }
+    return asc ? va - vb : vb - va;
+  });
+
+  tbody.innerHTML = '';
+  trios.forEach(g => {
+    tbody.appendChild(g.chanRow);
+    if (g.vidsRow) tbody.appendChild(g.vidsRow);
+    if (g.bendRow) tbody.appendChild(g.bendRow);
+  });
+}
+
+// ─────────────────────────────────────────────────
+// BOOT
+// ─────────────────────────────────────────────────
+init();
+setPreset(0);
 
 // ─────────────────────────────────────────────────
 // SORT (column headers)
