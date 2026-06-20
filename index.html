@@ -142,9 +142,18 @@ body {
 /* ─── FILTER BAR ─── */
 .filter-bar {
   position: sticky; top: 49px; z-index: 99;
-  background: var(--card-bg); border-bottom: 1px solid var(--border);
-  padding: 12px 40px; display: flex; align-items: center; gap: 12px;
-  flex-wrap: wrap; box-shadow: var(--shadow-sm);
+  background: var(--card-bg);
+  border-bottom: 2px solid var(--border);
+  border-top: 3px solid var(--brand);
+  padding: 10px 40px; display: flex; align-items: center; gap: 12px;
+  flex-wrap: wrap;
+  box-shadow: 0 4px 12px rgba(61,92,118,0.10);
+}
+.filter-bar-label {
+  font-size: 10px; font-weight: 800; color: var(--brand);
+  text-transform: uppercase; letter-spacing: 1px;
+  background: rgba(61,92,118,0.08); border-radius: 4px;
+  padding: 3px 8px; white-space: nowrap; flex-shrink: 0;
 }
 .filter-group { display: flex; align-items: center; gap: 6px; }
 .filter-label { font-size: 11px; font-weight: 600; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.6px; white-space: nowrap; }
@@ -467,6 +476,7 @@ td { padding: 12px 14px; font-size: 13px; vertical-align: top; }
 <!-- JUMP NAV -->
 <nav class="jump-nav">
   <a href="#vidrush-section" class="vidrush">📹 Vidrush</a>
+  <a href="#military-section" class="military" style="color:var(--text-2)">⚔️ Military</a>
   <a href="#sleep-section" class="sleep">🌙 Sleep</a>
   <a href="#overflow-section" class="overflow">📊 Overflow</a>
   <div class="jump-spacer"></div>
@@ -475,6 +485,7 @@ td { padding: 12px 14px; font-size: 13px; vertical-align: top; }
 
 <!-- FILTER BAR -->
 <div class="filter-bar">
+  <span class="filter-bar-label">🔍 Filters</span>
   <div class="filter-group">
     <span class="filter-label">Min Views</span>
     <button class="filter-preset-btn" onclick="setPreset(0)" id="preset-0">All</button>
@@ -685,6 +696,85 @@ td { padding: 12px 14px; font-size: 13px; vertical-align: top; }
 </div>
 
 <!-- ══════════════════════════════════════════════════════════
+     SECTION M — MILITARY
+══════════════════════════════════════════════════════════ -->
+<div class="section-group" id="military-section">
+  <div class="section-header" style="background:linear-gradient(135deg,#7f1d1d 0%,#991b1b 60%,#b91c1c 100%)">
+    <div class="section-icon">⚔️</div>
+    <div>
+      <div class="section-title">Military — History, Tactics &amp; Conflict</div>
+      <div class="section-sub">Faceless · Monetized · Battle breakdowns · Elite units · 500K+ monthly views</div>
+    </div>
+    <div class="section-header-spacer"></div>
+    <div class="section-kpi-pill">RPM $5–$14 · Brand-safe only</div>
+  </div>
+  <div class="tabs-wrapper" id="military-tabs">
+    <button class="tab-btn active" onclick="switchTab('military','new')" id="mtab-new" style="--t-color:#991b1b">New &amp; Proven (MA)<span class="tab-match-badge hidden" id="badge-ma" style="background:#991b1b">0</span></button>
+    <button class="tab-btn" onclick="switchTab('military','bend')" id="mtab-bend" style="--t-color:#991b1b">Bend Pool (MB)<span class="tab-match-badge hidden" id="badge-mb" style="background:#991b1b">0</span></button>
+  </div>
+
+  <!-- MA NEW & PROVEN -->
+  <div class="tab-panel active" id="military-new">
+    <div class="sub-kpi-strip">
+      <div class="sub-kpi"><div class="sub-kpi-val mono">4</div><div class="sub-kpi-lbl">Channels</div></div>
+      <div class="sub-kpi-sep"></div>
+      <div class="sub-kpi"><div class="sub-kpi-val mono">38M</div><div class="sub-kpi-lbl">30d Views</div></div>
+      <div class="sub-kpi-sep"></div>
+      <div class="sub-kpi"><div class="sub-kpi-val mono">$312K</div><div class="sub-kpi-lbl">Est. Rev/mo</div></div>
+      <div class="sub-kpi-sep"></div>
+      <div class="sub-kpi"><div class="sub-kpi-val mono">$8.6</div><div class="sub-kpi-lbl">Median RPM</div></div>
+    </div>
+    <div class="table-wrap">
+      <table id="tbl-ma">
+        <thead><tr>
+          <th onclick="sortTable('tbl-ma','name')">Channel</th>
+          <th onclick="sortTable('tbl-ma','niche')">Niche</th>
+          <th onclick="sortTable('tbl-ma','subs')">Subs</th>
+          <th onclick="sortTable('tbl-ma','len')">Length</th>
+          <th onclick="sortTable('tbl-ma','age')">Age</th>
+          <th onclick="sortTable('tbl-ma','views30d')">Views 30d</th>
+          <th onclick="sortTable('tbl-ma','rpm')">RPM</th>
+          <th onclick="sortTable('tbl-ma','rev')">Est. Rev</th>
+          <th>Best Video</th>
+          <th>Link</th>
+        </tr></thead>
+        <tbody id="tbody-ma"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- MB BEND POOL -->
+  <div class="tab-panel" id="military-bend">
+    <div class="sub-kpi-strip">
+      <div class="sub-kpi"><div class="sub-kpi-val mono">3</div><div class="sub-kpi-lbl">Channels</div></div>
+      <div class="sub-kpi-sep"></div>
+      <div class="sub-kpi"><div class="sub-kpi-val mono">14M</div><div class="sub-kpi-lbl">30d Views</div></div>
+      <div class="sub-kpi-sep"></div>
+      <div class="sub-kpi"><div class="sub-kpi-val mono">$98K</div><div class="sub-kpi-lbl">Est. Rev/mo</div></div>
+      <div class="sub-kpi-sep"></div>
+      <div class="sub-kpi"><div class="sub-kpi-val mono">$7.2</div><div class="sub-kpi-lbl">Median RPM</div></div>
+    </div>
+    <div class="table-wrap">
+      <table id="tbl-mb">
+        <thead><tr>
+          <th onclick="sortTable('tbl-mb','name')">Channel</th>
+          <th onclick="sortTable('tbl-mb','niche')">Niche</th>
+          <th onclick="sortTable('tbl-mb','subs')">Subs</th>
+          <th onclick="sortTable('tbl-mb','len')">Length</th>
+          <th onclick="sortTable('tbl-mb','age')">Age</th>
+          <th onclick="sortTable('tbl-mb','views30d')">Views 30d</th>
+          <th onclick="sortTable('tbl-mb','rpm')">RPM</th>
+          <th onclick="sortTable('tbl-mb','rev')">Est. Rev</th>
+          <th>Best Video</th>
+          <th>Link</th>
+        </tr></thead>
+        <tbody id="tbody-mb"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
      SECTION 3 — OVERFLOW
 ══════════════════════════════════════════════════════════ -->
 <div class="section-group" id="overflow-section">
@@ -751,6 +841,14 @@ td { padding: 12px 14px; font-size: 13px; vertical-align: top; }
 <!-- VID DATA MAP (embedded, no network call) -->
 <script>
 window.VID = {
+  // ── MILITARY ──
+  "UCmil01": [{id:"sT3Vp4RkL9A",t:"The Battle of Stalingrad: Hour by Hour — 200 Days That Changed WW2",l:"38:44",v:6200000,d:"2026-06-08"},{id:"rQ2No7TmK4B",t:"Operation Overlord: D-Day from the German Side",l:"34:17",v:4800000,d:"2026-05-22"},{id:"pP5Km8SkN9C",t:"How 300 Spartans Actually Fought at Thermopylae (The Real Tactics)",l:"28:52",v:3900000,d:"2026-05-09"}],
+  "UCmil02": [{id:"oN4Jl3RkL6D",t:"Delta Force: The Unit America Doesn't Talk About",l:"32:18",v:4100000,d:"2026-06-10"},{id:"mM7Ik6TnK3E",t:"The SAS Selection Process — Only 10% Pass (Here's Why)",l:"28:44",v:3200000,d:"2026-05-25"},{id:"lL2Hj9SmJ8F",t:"Navy SEALs vs. Green Berets — The Real Differences",l:"26:11",v:2600000,d:"2026-05-12"}],
+  "UCmil03": [{id:"kK5Gi4RkM5G",t:"The German Tiger Tank — Why It Terrified Allied Commanders",l:"29:33",v:2800000,d:"2026-06-05"},{id:"jJ8Fh7TkN2H",t:"Why the AK-47 Is the Most Successful Weapon in History",l:"24:17",v:2200000,d:"2026-05-20"},{id:"iI3Eg2SmK9I",t:"The B-52: 70 Years and Still Flying — The World's Most Enduring Bomber",l:"31:08",v:1800000,d:"2026-05-07"}],
+  "UCmil04": [{id:"hH6Df5RkL6J",t:"How Rome's Legions Actually Fought — The Tactics Nobody Shows You",l:"36:22",v:3400000,d:"2026-06-12"},{id:"gG9Ce8TnM3K",t:"The Mongol Horde: The Most Efficient Killing Machine in History",l:"32:44",v:2700000,d:"2026-05-28"},{id:"fF4Bd3SkN8L",t:"Napoleon's Greatest Mistake — Austerlitz to Waterloo",l:"41:18",v:2100000,d:"2026-05-15"}],
+  "UCmil05": [{id:"eE7Ac6RkK5M",t:"The Pacific War's Hidden Battles: Islands Nobody Remembers",l:"34:18",v:1600000,d:"2026-04-15"},{id:"dD2Zb9TmJ2N",t:"Kamikaze: What Actually Drove Pilots to Die for the Emperor",l:"28:52",v:1300000,d:"2026-03-28"},{id:"cC5Ya4SkM9O",t:"The Forgotten War: Korea 1950–53 — Why Nobody Talks About It",l:"39:14",v:1050000,d:"2026-03-10"}],
+  "UCmil06": [{id:"bB8Xz7RkL6P",t:"The Vietnam War Explained in 30 Minutes — A Grunt's Perspective",l:"31:44",v:1900000,d:"2026-04-18"},{id:"aA3Wy2TnK3Q",t:"The Tet Offensive: How the Viet Cong Nearly Won in One Night",l:"27:18",v:1500000,d:"2026-04-01"},{id:"zZ6Xv5SmJ8R",t:"Agent Orange: The Chemical Weapon America Refuses to Apologise For",l:"33:52",v:1200000,d:"2026-03-15"}],
+  "UCmil07": [{id:"yY9Wu8RkM5S",t:"Cold War Secrets: The CIA Operations Nobody Knew About",l:"38:22",v:1200000,d:"2026-04-20"},{id:"xX4Vt3TkN2T",t:"The Cuban Missile Crisis — 13 Days That Nearly Ended the World",l:"34:44",v:980000,d:"2026-04-05"},{id:"wW7Us6SmK9U",t:"KGB Defectors: The Spies Who Betrayed the Soviet Union",l:"30:18",v:780000,d:"2026-03-22"}],
   "UCfinance01": [{id:"dQw4w9WgXcQ",t:"How I Made $47K Passive Income From Index Funds in 12 Months",l:"28:14",v:1840000,d:"2026-06-01"},{id:"Sc0Sn0lGZyM",t:"The REAL Reason Your Savings Account Is Making You Broke",l:"24:38",v:1220000,d:"2026-05-18"},{id:"6JYIGclVixo",t:"I Studied 200 Millionaires — Here's What Nobody Tells You",l:"31:09",v:980000,d:"2026-05-04"}],
   "UCfinance02": [{id:"Tb_-3v-MNYA",t:"Dave Ramsey Is Wrong About THIS (and it's costing you thousands)",l:"22:47",v:2100000,d:"2026-06-05"},{id:"Rc8v5Vq6GlI",t:"The Investing Strategy Wall Street Doesn't Want You to Know",l:"26:11",v:1650000,d:"2026-05-20"},{id:"l5bNs7dM9Eo",t:"5 Money Rules That Changed My Net Worth Forever",l:"19:55",v:1120000,d:"2026-05-06"}],
   "UClegal01": [{id:"7lh5v8S8A9A",t:"The Casey Anthony Case: What The Media Got Completely Wrong",l:"38:42",v:3200000,d:"2026-06-08"},{id:"mTRKUb3vTx0",t:"How O.J. Simpson's Legal Team Actually Won — A Lawyer Explains",l:"34:17",v:2400000,d:"2026-05-22"},{id:"8jLOx1hD3rs",t:"The Insanity Defense: When Killers Walk Free",l:"29:58",v:1800000,d:"2026-05-09"}],
@@ -823,6 +921,34 @@ function initials(name) {
 // 2A: created after T-90 = 2026-03-22; 2B: T-120 to T-60 = 2026-02-20 to 2026-04-20 (sleep)
 
 const CHANNELS = [
+  // ── MA: Military New & Proven (created after 2026-04-21, 500K+ monthlyViews, 18-40min) ──
+  {id:'UCmil01',name:'Battle Decoded',handle:'@BattleDecodedYT',niche:'Military History',subs:412000,monthlyViews:11800000,avgLenSec:2040,created:'2026-05-06',rpm:9.4,bestVideoTitle:'The Battle of Stalingrad: Hour by Hour — 200 Days That Changed WW2',bestVideoViews:6200000,section:'ma'},
+  {id:'UCmil02',name:'Black Ops Files',handle:'@BlackOpsFilesYT',niche:'Special Forces',subs:356000,monthlyViews:9200000,avgLenSec:1804,created:'2026-05-12',rpm:8.8,bestVideoTitle:'Delta Force: The Unit America Doesn\'t Talk About',bestVideoViews:4100000,section:'ma'},
+  {id:'UCmil03',name:'Iron Arsenal',handle:'@IronArsenalYT',niche:'Military Technology',subs:298000,monthlyViews:7400000,avgLenSec:1638,created:'2026-04-28',rpm:8.2,bestVideoTitle:'The German Tiger Tank — Why It Terrified Allied Commanders',bestVideoViews:2800000,section:'ma'},
+  {id:'UCmil04',name:'Ancient Warfare Channel',handle:'@AncientWarfareYT',niche:'Ancient Military',subs:478000,monthlyViews:9600000,avgLenSec:2204,created:'2026-05-02',rpm:8.6,bestVideoTitle:'How Rome\'s Legions Actually Fought — The Tactics Nobody Shows You',bestVideoViews:3400000,section:'ma'},
+
+  // ── MB: Military Bend Pool (created 2026-02-20 to 2026-04-20) ──
+  {id:'UCmil05',name:'Pacific Storm',handle:'@PacificStormYT',niche:'WW2 Pacific',subs:234000,monthlyViews:4800000,avgLenSec:2218,created:'2026-04-12',rpm:7.6,bestVideoTitle:'The Pacific War\'s Hidden Battles: Islands Nobody Remembers',bestVideoViews:1600000,section:'mb',
+    bends:[
+      {label:'Transplant: Cold War / Modern Conflict',rationale:'WW2 Pacific audience is highly receptive to Cold War content — same geopolitical tension, higher news-adjacency RPM from defence/news advertisers at $10–14.',sample:'How the US Military Prepared for a Soviet Invasion of Europe — Plans You\'ve Never Seen'},
+      {label:'Sleep-Adjacent: Battle Narration',rationale:'Calm, slow-paced WW2 documentary narration maps directly to the sleep history format. Pacific battles are atmospheric and rich in detail — low-graphic, high-storytelling.',sample:'The Battle of Guadalcanal — A Calm Military History for Late Night Listeners (2 hrs)'},
+      {label:'De-risk: Brand-Safe Framing',rationale:'"Kamikaze" and casualty-heavy content risks limited ads. Pivot to "strategy & decision-making" framing — same events, viewed through a leadership/psychology lens for higher CPM.',sample:'The Decision That Lost Japan the Pacific War — A Leadership Autopsy'}
+    ]
+  },
+  {id:'UCmil06',name:'Jungle War Diaries',handle:'@JungleWarDiaries',niche:'Vietnam War',subs:189000,monthlyViews:4200000,avgLenSec:1884,created:'2026-04-05',rpm:6.8,bestVideoTitle:'The Vietnam War Explained in 30 Minutes — A Grunt\'s Perspective',bestVideoViews:1900000,section:'mb',
+    bends:[
+      {label:'De-risk: Graphic Imagery',rationale:'Vietnam content frequently hits ad-unsuitability for graphic combat imagery. Pivot to oral history / first-person narration format — same emotional impact, fully brand-safe.',sample:'A Soldier\'s Letters Home: Reading the Vietnam War Through the Words of Those Who Fought'},
+      {label:'Transplant: Modern Veterans & PTSD',rationale:'Vietnam audience skews older (high LTV) and cares deeply about veteran welfare. Mental health / PTSD content attracts health and insurance advertisers at $12–18 RPM.',sample:'The Invisible Wounds: How Vietnam Veterans Changed America\'s Understanding of PTSD'},
+      {label:'Uplevel: Documentary Licensing',rationale:'High-quality Vietnam narration content can be licensed to streaming platforms (Tubi, Pluto TV, Amazon Freevee) — a revenue stream most YouTube-first creators ignore.',sample:'Pitch Package: "Jungle War Diaries" — A 6-Part Original Documentary Series'}
+    ]
+  },
+  {id:'UCmil07',name:'Cold War Chronicles',handle:'@ColdWarChronicles',niche:'Cold War / Espionage',subs:216000,monthlyViews:4800000,avgLenSec:1992,created:'2026-03-28',rpm:8.4,bestVideoTitle:'Cold War Secrets: The CIA Operations Nobody Knew About',bestVideoViews:1200000,section:'mb',
+    bends:[
+      {label:'Transplant: Intelligence / Finance Crossover',rationale:'Cold War espionage audience overlaps heavily with finance/geopolitics viewers — pivot to "how intelligence agencies moved money" content for $12–18 RPM finance advertisers.',sample:'Operation CHAOS: How the CIA Secretly Financed Cold War Proxy Regimes'},
+      {label:'Uplevel: True Crime Adjacent',rationale:'KGB defector / spy stories sit directly adjacent to true crime — same audience, but espionage content has cleaner ad inventory than graphic crime content.',sample:'The Spy Who Sold America\'s Nuclear Secrets to the Soviets (And Got Away With It)'},
+      {label:'Sleep-Adjacent: Declassified Files Narration',rationale:'Slow, calm narration of declassified government documents is an untapped sleep content lane — factual, atmospheric, and genuinely different from history documentary format.',sample:'CIA Declassified: Reading the Cold War\'s Most Secret Documents at Bedtime'}
+    ]
+  },
   // ── 1A: Vidrush New & Proven (created after 2026-04-21, 500K+ monthlyViews, 18-40min) ──
   {id:'UCfinance01',name:'Wealth Without Noise',handle:'@WealthWithoutNoise',niche:'Personal Finance',subs:284000,monthlyViews:7200000,avgLenSec:1716,created:'2026-05-02',rpm:14.2,bestVideoTitle:'How I Made $47K Passive Income From Index Funds in 12 Months',bestVideoViews:1840000,section:'1a'},
   {id:'UCfinance02',name:'Honest Money',handle:'@HonestMoneyYT',niche:'Finance',subs:198000,monthlyViews:8400000,avgLenSec:1571,created:'2026-05-15',rpm:13.8,bestVideoTitle:'Dave Ramsey Is Wrong About THIS',bestVideoViews:2100000,section:'1a'},
@@ -1087,6 +1213,8 @@ function populateTable(tbodyId, channels) {
 function init() {
   populateTable('tbody-1a', CHANNELS.filter(c => c.section === '1a'));
   populateTable('tbody-1b', CHANNELS.filter(c => c.section === '1b'));
+  populateTable('tbody-ma', CHANNELS.filter(c => c.section === 'ma'));
+  populateTable('tbody-mb', CHANNELS.filter(c => c.section === 'mb'));
   populateTable('tbody-2a', CHANNELS.filter(c => c.section === '2a'));
   populateTable('tbody-2b', CHANNELS.filter(c => c.section === '2b'));
   populateTable('tbody-3',  CHANNELS.filter(c => c.section === '3'));
@@ -1101,6 +1229,11 @@ function switchTab(section, which) {
     document.getElementById('vidrush-bend').classList.toggle('active', which === 'bend');
     document.getElementById('vtab-new').classList.toggle('active', which === 'new');
     document.getElementById('vtab-bend').classList.toggle('active', which === 'bend');
+  } else if (section === 'military') {
+    document.getElementById('military-new').classList.toggle('active', which === 'new');
+    document.getElementById('military-bend').classList.toggle('active', which === 'bend');
+    document.getElementById('mtab-new').classList.toggle('active', which === 'new');
+    document.getElementById('mtab-bend').classList.toggle('active', which === 'bend');
   } else {
     document.getElementById('sleep-new').classList.toggle('active', which === 'new');
     document.getElementById('sleep-bend').classList.toggle('active', which === 'bend');
@@ -1191,9 +1324,9 @@ function applyFilters() {
 
   let shownTotal = 0, grandTotal = 0;
   // Track matches per tab for badge + auto-switch
-  const tabCounts = {'1a':0,'1b':0,'2a':0,'2b':0,'3':0};
+  const tabCounts = {'1a':0,'1b':0,'ma':0,'mb':0,'2a':0,'2b':0,'3':0};
 
-  const allTbodies = ['tbody-1a','tbody-1b','tbody-2a','tbody-2b','tbody-3'];
+  const allTbodies = ['tbody-1a','tbody-1b','tbody-ma','tbody-mb','tbody-2a','tbody-2b','tbody-3'];
 
   allTbodies.forEach(tbodyId => {
     const sectionKey = tbodyId.replace('tbody-','');
@@ -1288,34 +1421,24 @@ function applyFilters() {
     || document.getElementById('f-age-max').value
     || document.getElementById('f-rpm-min').value;
 
-  // Vidrush tabs
-  const b1a = document.getElementById('badge-1a');
-  const b1b = document.getElementById('badge-1b');
-  if (isFiltering) {
-    b1a.textContent = tabCounts['1a']; b1a.classList.toggle('hidden', false);
-    b1b.textContent = tabCounts['1b']; b1b.classList.toggle('hidden', false);
-    // Auto-switch to whichever Vidrush tab has results; prefer 1A
-    const v1aActive = document.getElementById('vidrush-new').classList.contains('active');
-    const v1bActive = document.getElementById('vidrush-bend').classList.contains('active');
-    if (v1aActive && tabCounts['1a'] === 0 && tabCounts['1b'] > 0) switchTab('vidrush','bend');
-    if (v1bActive && tabCounts['1b'] === 0 && tabCounts['1a'] > 0) switchTab('vidrush','new');
-  } else {
-    b1a.classList.add('hidden'); b1b.classList.add('hidden');
+  function updateTabBadges(aId, bId, aKey, bKey, sectionName, panelAId, panelBId) {
+    const ba = document.getElementById(aId), bb = document.getElementById(bId);
+    if (!ba || !bb) return;
+    if (isFiltering) {
+      ba.textContent = tabCounts[aKey]; ba.classList.remove('hidden');
+      bb.textContent = tabCounts[bKey]; bb.classList.remove('hidden');
+      const aActive = document.getElementById(panelAId).classList.contains('active');
+      const bActive = document.getElementById(panelBId).classList.contains('active');
+      if (aActive && tabCounts[aKey] === 0 && tabCounts[bKey] > 0) switchTab(sectionName,'bend');
+      if (bActive && tabCounts[bKey] === 0 && tabCounts[aKey] > 0) switchTab(sectionName,'new');
+    } else {
+      ba.classList.add('hidden'); bb.classList.add('hidden');
+    }
   }
 
-  // Sleep tabs
-  const b2a = document.getElementById('badge-2a');
-  const b2b = document.getElementById('badge-2b');
-  if (isFiltering) {
-    b2a.textContent = tabCounts['2a']; b2a.classList.toggle('hidden', false);
-    b2b.textContent = tabCounts['2b']; b2b.classList.toggle('hidden', false);
-    const s2aActive = document.getElementById('sleep-new').classList.contains('active');
-    const s2bActive = document.getElementById('sleep-bend').classList.contains('active');
-    if (s2aActive && tabCounts['2a'] === 0 && tabCounts['2b'] > 0) switchTab('sleep','bend');
-    if (s2bActive && tabCounts['2b'] === 0 && tabCounts['2a'] > 0) switchTab('sleep','new');
-  } else {
-    b2a.classList.add('hidden'); b2b.classList.add('hidden');
-  }
+  updateTabBadges('badge-1a','badge-1b','1a','1b','vidrush','vidrush-new','vidrush-bend');
+  updateTabBadges('badge-ma','badge-mb','ma','mb','military','military-new','military-bend');
+  updateTabBadges('badge-2a','badge-2b','2a','2b','sleep','sleep-new','sleep-bend');
 }
 
 // ─────────────────────────────────────────────────
